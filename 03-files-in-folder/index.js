@@ -1,6 +1,5 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const process = require('node:process');
 const { readdir } = require('node:fs/promises');
 
 const file = path.join(__dirname, 'secret-folder');
