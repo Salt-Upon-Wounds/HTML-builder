@@ -9,6 +9,7 @@ const stream = fs.createWriteStream(file);
 console.log('Enter text:');
 process.stdin.on('data', (data) => {
   if (data.toString().trim() == 'exit') {
+    console.log('farewell phrase');
     process.exit();
   }
   stream.write(data);
@@ -18,5 +19,6 @@ process.stdin.on('data', (data) => {
 process.stdin.resume();
 
 process.on('SIGINT', () => {
+  console.log('farewell phrase');
   process.exit();
 });
