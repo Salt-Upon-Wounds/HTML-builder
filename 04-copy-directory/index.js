@@ -1,15 +1,9 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const { readdir } = require('node:fs/promises');
-
-fs.mkdir(path.join(__dirname, 'files-copy'), { recursive: true }, (err) => {
-  if (err) {
-    return console.error(err);
-  }
-});
+const pr = require('node:fs/promises');
 
 function copydir(from, to) {
-  readdir(from, { withFileTypes: true })
+  pr.readdir(from, { withFileTypes: true })
     .then((result) => {
       for (const file of result) {
         if (file.isDirectory()) {
@@ -37,4 +31,19 @@ function copydir(from, to) {
       console.log(err);
     });
 }
-copydir(path.join(__dirname, 'files'), path.join(__dirname, 'files-copy'));
+
+pr.access(path.join(__dirname, 'files-copy'), fs.constants.W_OK)
+  .then(() => {
+    return pr.rm(path.join(__dirname, 'files-copy'), { recursive: true });
+  })
+  .catch(() => {})
+  .finally(() => {
+    pr.mkdir(path.join(__dirname, 'files-copy'), { recursive: true }).then(
+      () => {
+        copydir(
+          path.join(__dirname, 'files'),
+          path.join(__dirname, 'files-copy'),
+        );
+      },
+    );
+  });
