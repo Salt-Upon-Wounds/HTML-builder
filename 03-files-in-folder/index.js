@@ -13,13 +13,9 @@ readdir(file)
           return;
         }
         if (stats.isFile()) {
-          console.log(
-            path.parse(file).name,
-            '-',
-            path.extname(file),
-            '-',
-            stats.size,
-          );
+          let ext = path.extname(file);
+          if (ext && ext[0] === '.') ext = ext.slice(1, ext.length);
+          console.log(path.parse(file).name, '-', ext, '-', stats.size);
         }
       });
     }
