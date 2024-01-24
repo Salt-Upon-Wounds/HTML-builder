@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const pr = require('node:fs/promises');
-const { log } = require('node:console');
+const readline = require('readline');
 
 function cp() {
   function copydir(from, to) {
@@ -95,10 +95,14 @@ function htmlbuilder() {
   const componentPath = path.join(__dirname, 'components');
   const ws = fs.createWriteStream(resultPath);
   const reg = /{{[^{}]{1,}}}/g;
-  (async () => {
-    const file = await pr.open(templatePath);
 
-    for await (let line of file.readLines()) {
+  (async () => {
+    const rl = readline.createInterface({
+      input: fs.createReadStream(templatePath),
+      crlfDelay: Infinity,
+    });
+
+    for await (let line of rl) {
       const tmp = line.match(reg);
       if (tmp) {
         for (const key of tmp) {
